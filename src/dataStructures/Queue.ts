@@ -1,5 +1,5 @@
 
-class Queue<T> {
+export class Queue<T> {
   private items: {[key: number]: T} = {};
   private count: number = 0;
   private headIndex: number = 0;
@@ -50,4 +50,3 @@ class Queue<T> {
   }
 }
 
-export default Queue;
