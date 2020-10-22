@@ -10,6 +10,7 @@ export class Stack<T> {
   pop(): T {
     const res = this.items[this.length - 1];
     delete this.items[this.length - 1];
+    this.length -= 1;
     return res;
   }
 
