@@ -5,6 +5,7 @@ export class Stack<T> {
 
   push(item: T) {
     this.items[this.length++] = item;
+    return this;
   }
 
   pop(): T {
@@ -18,7 +19,7 @@ export class Stack<T> {
     return this.items[this.length - 1];
   }
 
-  size(): number {
+  get size(): number {
     return this.length;
   }
 

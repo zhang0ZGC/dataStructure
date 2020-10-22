@@ -1,4 +1,7 @@
 
+/**
+ * 单队列
+ */
 export class Queue<T> {
   private items: {[key: number]: T} = {};
   private count: number = 0;
@@ -10,6 +13,7 @@ export class Queue<T> {
    */
   enqueue(item: T){
     this.items[this.count++] = item;
+    return this;
   }
 
   /**
@@ -31,7 +35,7 @@ export class Queue<T> {
     return this.items[this.headIndex];
   }
 
-  size(): number {
+  get size(): number {
     return this.count - this.headIndex;
   }
 
