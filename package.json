@@ -1,0 +1,14 @@
+{
+  "name": "data-structure",
+  "version": "0.0.1",
+  "author": "XM<xm@tqzgc.com>",
+  "homepage": "https://github.com/zhang0ZGC/dataStructure",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "peerDependencies": {
+    "typescript": "*"
+  }
+}
