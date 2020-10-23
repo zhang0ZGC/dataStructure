@@ -52,5 +52,17 @@ export class Queue<T> {
     }
     return res.join(',');
   }
+  /**
+   * 迭代器方法
+   */
+  [Symbol.iterator]() {
+    let index = this.headIndex - 1;
+    return {
+      next: () => {
+        index++;
+        return {value: this.items[index], done: index===this.count};
+      }
+    }
+  }
 }
 
