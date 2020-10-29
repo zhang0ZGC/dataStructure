@@ -1,5 +1,5 @@
 
-export class Stack<T> {
+export default class Stack<T> {
   private items: {[key: number]: T} = [];
   private length: number = 0;
 
