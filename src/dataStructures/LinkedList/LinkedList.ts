@@ -1,16 +1,8 @@
+import LinkedNode from "./LinkedNode";
 
 const DEFAULT_EQUALS_FN = (a: any, b: any) => a === b;
 
-export class LinkedNode<T> {
-  public value?: T = undefined;
-  public next?: LinkedNode<T> = undefined;
-
-  constructor(value: T) {
-    this.value = value;
-  }
-}
-
-export class LinkedList<T>{
+export default class LinkedList<T>{
   private count = 0;
   private head?: LinkedNode<T> = undefined;
   private equalsFn: Function;

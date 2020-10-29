@@ -2,7 +2,7 @@
 /**
  * 单队列
  */
-export class Queue<T> {
+export default class Queue<T> {
   private items: {[key: number]: T} = {};
   private count: number = 0;
   private headIndex: number = 0;
