@@ -22,9 +22,9 @@ let renderQueue: number[] = [];
 function enqueue(item: number) {
   log('[enqueue]', item);
   renderQueue.push(item);
-  // 结合下面`process`函数可知，_renderCount不为0时表示正在执行更新任务
+  // 结合下面`process`函数可知，_renderCount不为0时表示已经有更新任务添加到任务队列等待执行，不需要重复加入微任务队列
   if (!process._renderCount++) {
-    log('[run process]', item);
+    log('[start up process]', item);
     defer(process);
   }
 }
@@ -59,9 +59,8 @@ function process() {
 process._renderCount = 0;
 
 
-for (const s of [1,2]) {
-  enqueue(s);
-}
+enqueue(1);
+enqueue(2);
 
 setTimeout(function addNewItem() {
   enqueue(3);
@@ -72,3 +71,37 @@ defer(function addItem2() {
   enqueue(5);
 });
 enqueue(6);
+
+// #1 [enqueue] 1
+// * 首次入队时将 process 函数放入微任务队列，但不会立即执行(当本次宏任务结束后才会执行微任务队列)
+// #2 [start up process] 1
+// #3 [enqueue] 2
+// #4 [enqueue] 4
+// #5 [enqueue] 6
+// * 经过 #5 步骤，宏任务队列代码已经执行完毕，开始执行微任务队列
+// #6 [process] (4) [1, 2, 4, 6]
+// #7 [render] 1
+// #8 [render] 2
+// * 在执行过程中在 renderQueue 中添加了一个元素
+// #9 [enqueue] 1000
+// #10 [render] 4
+// #11 [render] 6
+// * 一次process循环结束，发现还有任务，继续循环
+// #12 [process] [1000]
+// #13 [render] 1000
+// * 一次 process 微任务 到此结束
+// #14 ------------------
+// * 由于在defer函数中执行的入队，addItem2就是下一个微任务，会在上一个微任务执行完执行此微任务
+// #15 [enqueue] 5
+// #16 [run process] 5
+// #17 [process] [5]
+// #18 [render] 5
+// * 此时微任务队列为空
+// #19 -------------------
+// < undefined
+// * 检查宏任务队列，执行(由setTimeout添加的)宏任务
+// #20 [enqueue] 3
+// #21 [run process] 3
+// #22 [process] [3]
+// #23 [render] 3
+// #24 -------------------
