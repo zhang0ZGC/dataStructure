@@ -1,18 +1,17 @@
 import LinkedNode from "./LinkedNode";
-
-const DEFAULT_EQUALS_FN = (a: any, b: any) => a === b;
+import { defaultEquals } from "../../utils";
 
 export default class LinkedList<T>{
   private count = 0;
   private head?: LinkedNode<T> = undefined;
   private equalsFn: Function;
   constructor(equalsFn?: Function){
-    this.equalsFn = equalsFn || DEFAULT_EQUALS_FN;
+    this.equalsFn = equalsFn || defaultEquals;
   }
 
   /**
    * 向链表尾部添加元素
-   * @param element 
+   * @param element
    */
   push(element: T) {
     const node = new LinkedNode(element);
@@ -32,8 +31,8 @@ export default class LinkedList<T>{
 
   /**
    * 在特定位置插入元素
-   * @param element 
-   * @param position 
+   * @param element
+   * @param position
    */
   insert(element: T, position: number) {
 
@@ -41,7 +40,7 @@ export default class LinkedList<T>{
 
   /**
    * 获取特定位置的元素
-   * @param position 
+   * @param position
    */
   getElementAt(position: number) {
 
@@ -49,7 +48,7 @@ export default class LinkedList<T>{
 
   /**
    * 移除特定元素
-   * @param element 
+   * @param element
    */
   remove(element: T) {
 
@@ -57,7 +56,7 @@ export default class LinkedList<T>{
 
   /**
    * 移除特定位置的元素
-   * @param index 
+   * @param index
    */
   removeAt(index: number) {
     if (index >=0 && index < this.count) {
@@ -79,11 +78,11 @@ export default class LinkedList<T>{
   }
 
   /**
-   * 
+   *
    * @param element 返回元素的位置
    */
   indexOf(element: T) {
-    
+
   }
 
   isEmpty(){
