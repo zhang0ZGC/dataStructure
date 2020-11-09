@@ -24,7 +24,8 @@ export default class LinkedList<T>{
       }
       current.next = node;
     } else {
-      current = node;
+      // current = node;
+      this.head = node;
     }
     this.count++;
   }
