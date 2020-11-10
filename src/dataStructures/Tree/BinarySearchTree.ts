@@ -6,10 +6,12 @@ export class Node<T=any> {
   }
 }
 
-export default class BinarySearchTree<T> {
-  private root: Node<T> | null = null;
+type TreeNode<T> = Node<T> | null;
 
-  constructor(private compareFn: ICompareFunction<T>=defaultCompare) {
+export default class BinarySearchTree<T> {
+  protected root: TreeNode<T> = null;
+
+  constructor(protected compareFn: ICompareFunction<T>=defaultCompare) {
   }
 
 
@@ -74,7 +76,7 @@ export default class BinarySearchTree<T> {
     }
   }
 
-  private inOrderTraverseNode(node: Node<T> | null, callback: Function) {
+  private inOrderTraverseNode(node: TreeNode<T>, callback: Function) {
     if (node !== null) {
       this.inOrderTraverseNode(node.left, callback);
       callback(node.key);
@@ -82,7 +84,7 @@ export default class BinarySearchTree<T> {
     }
   }
 
-  private preOrderTraverseNode(node: Node<T> | null, callback: Function) {
+  private preOrderTraverseNode(node: TreeNode<T>, callback: Function) {
     if (node !== null) {
       callback(node.key);
       this.preOrderTraverseNode(node.left, callback);
@@ -90,7 +92,7 @@ export default class BinarySearchTree<T> {
     }
   }
 
-  private postOrderTraverseNode(node: Node<T> | null, callback: Function) {
+  private postOrderTraverseNode(node: TreeNode<T>, callback: Function) {
     if (node !== null) {
       this.postOrderTraverseNode(node.left, callback);
       this.postOrderTraverseNode(node.right, callback);
@@ -98,7 +100,7 @@ export default class BinarySearchTree<T> {
     }
   }
 
-  private searchNode(node: Node<T> | null, key: T): boolean {
+  private searchNode(node: TreeNode<T>, key: T): boolean {
     if (node === null) return false;
     const compareRes = this.compareFn(key, node.key);
     if (compareRes === Compare.LESS_THAN) {
@@ -110,7 +112,7 @@ export default class BinarySearchTree<T> {
     }
   }
 
-  private maxNode(node: Node<T> | null) {
+  private maxNode(node: TreeNode<T>) {
     let current = node;
     while (current !== null && current.right !== null) {
       current = current.right;
@@ -118,7 +120,7 @@ export default class BinarySearchTree<T> {
     return current;
   }
 
-  private minNode(node: Node<T> | null) {
+  private minNode(node: TreeNode<T>) {
     let current = node;
     while (current !== null && current.left !== null) {
       current = current.left;
@@ -126,7 +128,7 @@ export default class BinarySearchTree<T> {
     return current;
   }
 
-  private removeNode(node: Node<T> | null, key: T): Node<T> | null {
+  private removeNode(node: TreeNode<T>, key: T): TreeNode<T> {
     if (node === null) return null;
 
     if (this.compareFn(key, node.key) === Compare.LESS_THAN) {
