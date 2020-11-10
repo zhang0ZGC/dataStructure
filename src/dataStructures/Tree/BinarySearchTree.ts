@@ -21,8 +21,20 @@ export default class BinarySearchTree<T> {
     }
   }
 
-  search(key: T) {
+  search(key: T): boolean {
+    return this.searchNode(this.root, key);
+  }
 
+  min() {
+    return this.minNode(this.root);
+  }
+
+  max() {
+    return this.maxNode(this.root);
+  }
+
+  remove(key: T) {
+    this.root = this.removeNode(this.root, key);
   }
 
   /**
@@ -35,27 +47,15 @@ export default class BinarySearchTree<T> {
   /**
    * 通过先序遍历方式遍历所有节点
    */
-  preOrderTraverse() {
-
+  preOrderTraverse(callback: Function) {
+    this.preOrderTraverseNode(this.root, callback);
   }
 
   /**
    * 通过后续遍历方式遍历所有节点
    */
-  postOrderTraverse() {
-
-  }
-
-  min() {
-
-  }
-
-  max() {
-
-  }
-
-  remove(key: T) {
-
+  postOrderTraverse(callback: Function) {
+    this.postOrderTraverseNode(this.root, callback);
   }
 
   private insertNode(node: Node<T>, key: T) {
@@ -79,6 +79,79 @@ export default class BinarySearchTree<T> {
       this.inOrderTraverseNode(node.left, callback);
       callback(node.key);
       this.inOrderTraverseNode(node.right, callback);
+    }
+  }
+
+  private preOrderTraverseNode(node: Node<T> | null, callback: Function) {
+    if (node !== null) {
+      callback(node.key);
+      this.preOrderTraverseNode(node.left, callback);
+      this.preOrderTraverseNode(node.right, callback);
+    }
+  }
+
+  private postOrderTraverseNode(node: Node<T> | null, callback: Function) {
+    if (node !== null) {
+      this.postOrderTraverseNode(node.left, callback);
+      this.postOrderTraverseNode(node.right, callback);
+      callback(node.key);
+    }
+  }
+
+  private searchNode(node: Node<T> | null, key: T): boolean {
+    if (node === null) return false;
+    const compareRes = this.compareFn(key, node.key);
+    if (compareRes === Compare.LESS_THAN) {
+      return this.searchNode(node.left, key);
+    } else if (compareRes === Compare.BIGGER_THAN) {
+      return this.searchNode(node.right, key);
+    } else {
+      return true;
+    }
+  }
+
+  private maxNode(node: Node<T> | null) {
+    let current = node;
+    while (current !== null && current.right !== null) {
+      current = current.right;
+    }
+    return current;
+  }
+
+  private minNode(node: Node<T> | null) {
+    let current = node;
+    while (current !== null && current.left !== null) {
+      current = current.left;
+    }
+    return current;
+  }
+
+  private removeNode(node: Node<T> | null, key: T): Node<T> | null {
+    if (node === null) return null;
+
+    if (this.compareFn(key, node.key) === Compare.LESS_THAN) {
+      node.left = this.removeNode(node.left, key);
+      return node;
+    } else if (this.compareFn(key, node.key) === Compare.BIGGER_THAN) {
+      node.right = this.removeNode(node.right, key);
+      return node;
+    } else {
+      if (node.left === null && node.right === null ) {
+        node = null;
+        return node;
+      }
+      if (node.left === null) {
+        node = node.right;
+        return node;
+      } else if(node.right === null) {
+        node = node.left;
+        return node;
+      }
+
+      const minNode = this.minNode(node.right) as Node<T>;
+      node.key = minNode.key;
+      node.right = this.removeNode(node.right, minNode.key);
+      return node;
     }
   }
 }
