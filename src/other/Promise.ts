@@ -105,7 +105,7 @@ class MyPromise<T=any> implements IMyPromise<T>{
     const self = this;
 
     function resolveByStatus(resolve: Function, reject: Function) {
-      defer(() => {
+      defer(function resolveDeferFunc(){
         try {
           const x = onFulfilled!(self.value as T);
           resolutionProducer(promise2, x, resolve, reject);
@@ -116,7 +116,7 @@ class MyPromise<T=any> implements IMyPromise<T>{
     }
 
     function rejectByStatus(resolve: Function, reject: Function) {
-      defer(() => {
+      defer(function rejectDeferFunc(){
         try {
           const x = onRejected!(self.value);
           resolutionProducer(promise2, x, resolve, reject);
@@ -126,13 +126,13 @@ class MyPromise<T=any> implements IMyPromise<T>{
       })
     }
 
-    const promise2 = new MyPromise<TResult1 | TResult2>(((resolve, reject) => {
+    const promise2 = new MyPromise<TResult1 | TResult2>(function executor(resolve, reject) {
       switch (self.status) {
         case "pending":
-          self.onFulfilledQueue.push(() => {
+          self.onFulfilledQueue.push(function fulfilledCb() {
             resolveByStatus(resolve, reject);
           });
-          self.onRejectedQueue.push(() => {
+          self.onRejectedQueue.push(function rejectedCb() {
             rejectByStatus(resolve, reject);
           })
           break;
@@ -145,7 +145,7 @@ class MyPromise<T=any> implements IMyPromise<T>{
         default:
           break;
       }
-    }));
+    });
 
     return promise2;
   }

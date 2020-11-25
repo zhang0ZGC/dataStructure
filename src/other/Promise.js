@@ -89,7 +89,7 @@ var MyPromise = /** @class */ (function () {
             onRejected = function onRejected(e) { throw e; };
         var self = this;
         function resolveByStatus(resolve, reject) {
-            defer(function () {
+            defer(function resolveDeferFunc() {
                 try {
                     var x = onFulfilled(self.value);
                     resolutionProducer(promise2, x, resolve, reject);
@@ -100,7 +100,7 @@ var MyPromise = /** @class */ (function () {
             });
         }
         function rejectByStatus(resolve, reject) {
-            defer(function () {
+            defer(function rejectDeferFunc() {
                 try {
                     var x = onRejected(self.value);
                     resolutionProducer(promise2, x, resolve, reject);
@@ -110,13 +110,13 @@ var MyPromise = /** @class */ (function () {
                 }
             });
         }
-        var promise2 = new MyPromise((function (resolve, reject) {
+        var promise2 = new MyPromise(function executor(resolve, reject) {
             switch (self.status) {
                 case "pending":
-                    self.onFulfilledQueue.push(function () {
+                    self.onFulfilledQueue.push(function fulfilledCb() {
                         resolveByStatus(resolve, reject);
                     });
-                    self.onRejectedQueue.push(function () {
+                    self.onRejectedQueue.push(function rejectedCb() {
                         rejectByStatus(resolve, reject);
                     });
                     break;
@@ -129,7 +129,7 @@ var MyPromise = /** @class */ (function () {
                 default:
                     break;
             }
-        }));
+        });
         return promise2;
     };
     return MyPromise;
